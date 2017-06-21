@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>The Daily Walk</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+
+<nav class="navbar navbar-inverse walk-head">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">The Daily Walk</a>
+        </div>
+
+        <ul class="nav navbar-nav">
+            <li ><a href="#"> <span class="glyphicon glyphicon-home"></span> Home </a></li>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span class="glyphicon glyphicon-bell"></span> Notifications <span class="badge badge-notify">3</span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Notification-1</a></li>
+                    <li><a href="#">Notification-2</a></li>
+                    <li><a href="#">Notification-3</a></li>
+                </ul>
+            </li>
+            <li><a href="#"> <span class="glyphicon glyphicon-comment"></span> Messages</a></li>
+        </ul>
+
+        <form class="navbar-form navbar-left">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li data-toggle="modal" data-target="#signUpModal" ng-show="showLogin"><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li data-toggle="modal" data-target="#signInModal" ng-show="showLogin"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li ng-show="showLogout"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout </a></li>
+        </ul>
+
+    </div>
+</nav>
+
+
+<div class="container">
+
+    <!------------ Sign Up Modal ------------->
+
+    <div class="modal fade" id="signUpModal" role="dialog">
+        <div class="modal-dialog modal-padding">
+            <div class="modal-content">
+                <div class="modal-header modal-adjust">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><span class="glyphicon glyphicon-user"></span>Sign Up</h4>
+                </div>
+                <div class="container signup-container">
+                    <form class="reg-form" ng-model="signup">
+                        <div class="form-group">
+                            <label for="email">Name</label>
+                            <input type="text" class="form-control" id="name" ng-model="signup.name" placeholder="Enter your name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Address</label>
+                            <input type="text" class="form-control" id="address" ng-model="signup.address" placeholder="Enter your address" name="address">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" ng-model="signup.email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Password:</label>
+                            <input type="password" class="form-control" id="pwd" ng-model="signup.password" placeholder="Enter password" name="pwd">
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="remember" ng-model="signup.remember"> Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-success" name="btn" value="signup" id="load2" ng-disabled="userForm.$invalid || signup.name == undefined || signup.password == undefined || signup.email == undefined || signup.address == undefined" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Register Processing" ng-click="signUp(signup, $event)">Register</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------- Login Modal -------------->
+
+    <div class="modal fade" id="signInModal" role="dialog">
+        <div class="modal-dialog modal-padding">
+            <div class="modal-content">
+                <div class="modal-header modal-adjust">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><span class="glyphicon glyphicon-user"></span>Login</h4>
+                </div>
+                <div class="container signup-container">
+                    <form class="reg-form" ng-model="login" name="userForm" novalidate>
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="logemail" ng-model="login.email" placeholder="Enter email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Password:</label>
+                            <input type="password" class="form-control" id="logpwd" ng-model="login.password" placeholder="Enter password" name="pwd">
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="remember"> Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-success" name="btn" value="login" id="load" ng-disabled="userForm.$invalid || login.email == undefined || login.password == undefined" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging In" ng-click="signIn(login,$event)">Login</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="controller/controller.js"></script>
+
+</body>
+</html>
