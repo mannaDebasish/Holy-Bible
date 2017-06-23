@@ -128,9 +128,9 @@ app.controller('HomeCtrl', function($scope,$rootScope,$http,$window,$timeout,use
                     url: '',
                     target: '_blank'
                 });
-             /*   $timeout(function(){
+             $timeout(function(){
                     $window.location.href = 'AdminDashboard/index.html';
-                },1100);*/
+                },1100);
             },function(err){
                 $('#load').button('reset');
                 console.log(err);
