@@ -12,30 +12,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-app.get('/bibleimage/:name', function (req, res, next) {
-
-  var options = {
-    root: __dirname + '/bible img/',
-    dotfiles: 'deny',
-    headers: {
-        'x-timestamp': Date.now(),
-        'x-sent': true
-    }
-  };
-
-  var fileName = req.params.name;
-  res.sendFile(fileName, options, function (err) {
-    if (err) {
-      next(err);
-    } else {
-      //console.log('Sent:', fileName);
-    }
-  });
-
-});
-
-
-
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
   ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
@@ -147,6 +123,30 @@ app.post('/login', function(req,res){
     }
   })
 });
+
+
+app.get('/bibleimage/:name', function (req, res, next) {
+
+  var options = {
+    root: __dirname + '/bible img/',
+    dotfiles: 'deny',
+    headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+    }
+  };
+
+  var fileName = req.params.name;
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      next(err);
+    } else {
+      //console.log('Sent:', fileName);
+    }
+  });
+
+});
+
 
 app.post('/updatebook', function(req,res){
   res.setHeader("Access-Control-Allow-Origin", "*");
