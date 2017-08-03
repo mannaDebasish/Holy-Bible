@@ -11,6 +11,31 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+
+app.get('/bibleimage/:name', function (req, res, next) {
+
+  var options = {
+    root: __dirname + '/bible img/',
+    dotfiles: 'deny',
+    headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+    }
+  };
+
+  var fileName = req.params.name;
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      next(err);
+    } else {
+      //console.log('Sent:', fileName);
+    }
+  });
+
+});
+
+
+
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
   ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
@@ -46,8 +71,10 @@ var personSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  bible_name:String,
-  chapter_name:String,
+  book:[{
+    bible_name:{type: String},
+    chapter_name:{type: String}
+  }],
   hash: String,
   salt: String
 });
@@ -80,8 +107,7 @@ app.post('/register', function(req,res){
     last_name: req.body.last_name,
     email: req.body.email,
     contact_number : req.body.contact_number,
-    bible_name : '',
-    chapter_name : ''
+    book:[]
   });
   var cryptPass = newPerson.setPassword(req.body.password);
   newPerson.save(function(err, Person){
@@ -123,20 +149,51 @@ app.post('/login', function(req,res){
 });
 
 app.post('/updatebook', function(req,res){
-  console.log(req.body);
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.set("Content-Type",'application/text');
+  var flag = 0;
 
-  Person.update({'_id':req.body._id}, { bible_name: req.body.bible_name }, function(err, Person){
+
+ /* Person.findOneAndUpdate({'_id':req.body._id}, {$push:{ book: req.body.book }}, function(err, Person){
     if(err)
       res.status(500).send();
     if(Person){
       console.log(Person);
-      res.status(200).send('updated book name');
+      res.status(200).send(req.body.book);
     }
+  });*/
 
-  })
+  Person.findOne({'_id':req.body._id,}, function(err, Person1){
+    if(err)
+      res.status(500).send();
+    else{
+      //console.log(Person.book);
+      for(var i = 0; i<Person1.book.length; i++){
+        if(Person1.book[i].bible_name == req.body.book.bible_name){
+          var chapter = Person1.book[i].chapter_name;
+          flag = 1;
+          res.status(200).send(chapter);
+          console.log("found you");
+          break;
+        }
+      }
+      if(flag == 0){
+        console.log("found you here");
+        Person.findOneAndUpdate({'_id':req.body._id}, {$push:{ book: req.body.book }}, function(err, person){
+          if(err)
+            res.status(500).send();
+          if(person){
+            console.log(person);
+            res.status(200).send(1);
+          }
+        });
+      }
+    }
+  });
+
+
+  /**/
 });
 
 
@@ -157,14 +214,14 @@ app.get('/getbiblelist', function(req, res){
 
 app.get('/bible/:bookName', function(req, res){
 
-    res.setHeader("Access-Control-Allow-Origin", "*");
+  	res.setHeader("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     res.set("Content-Type",'application/json');
 
   var bookname = req.params.bookName;
   console.log(bookname);
   var bookpath = filepath + bookname +'.json';
-    jsonfile.readFile(bookpath, function(err, obj) {
+	jsonfile.readFile(bookpath, function(err, obj) {
     //console.log(obj);
     res.send(obj);
   });
