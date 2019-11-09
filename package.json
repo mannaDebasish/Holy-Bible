@@ -12,7 +12,7 @@
     "express": "^4.15.3",
     "mocha": "^2.4.5",
     "mongodb": "^2.1.16",
-    "mongoose": "^4.10.2",
+    "mongoose": "^5.7.9",
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",
     "file-system": "^2.2.2",
